@@ -38,7 +38,7 @@
          setToken($p->id,$p->access_token);
        }
      }
-     echo("at: " . $params['access_token']);
+     echo("<script> top.locatoin.href='" . $loggedinurl "'; </script>";
    }
    else {
      echo("The state does not match. You may be a victim of CSRF.");
