@@ -1,10 +1,9 @@
 <?php 
-
+   session_start();
+   $subdomain = explode(".",$_SERVER['HTTP_HOST']);
    $app_id = "340879852685280";
    $app_secret = "711927c306a77b9bbe1277927e08e102";
-   $my_url = "http://www.confessionspage.com/auth/login.php";
-
-   session_start();
+   $my_url = "http://".$subdomain[0].".confessionspage.com/auth/login.php";
 
    $code = $_REQUEST["code"];
 
@@ -29,12 +28,17 @@
 
      $_SESSION['access_token'] = $params['access_token'];
 
-     $graph_url = "https://graph.facebook.com/me?access_token=" 
+     $graph_url = "https://graph.facebook.com/me/accounts?access_token=" 
        . $params['access_token'];
 
-     $user = json_decode(file_get_contents($graph_url));
-     echo("Hello " . $user->name);
-     echo("at: " . $params['access_token'];
+     $accounts = json_decode(file_get_contents($graph_url));
+     $pages = $accounts->data;
+     foreach($pages as $p) {
+       if ($p->id == $pageId) {
+         setToken($p->id,$p->access_token);
+       }
+     }
+     echo("at: " . $params['access_token']);
    }
    else {
      echo("The state does not match. You may be a victim of CSRF.");
