@@ -34,6 +34,7 @@
 
      $user = json_decode(file_get_contents($graph_url));
      echo("Hello " . $user->name);
+     echo("at: " . $params['access_token'];
    }
    else {
      echo("The state does not match. You may be a victim of CSRF.");
