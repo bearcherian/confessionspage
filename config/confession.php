@@ -14,12 +14,12 @@ class Confession {
 
 	function __construct($value) {
 		$stmt = "SELECT * FROM posts WHERE post_id = :postid;";
-		$values = array(':postid' => $postid);
+		$values = array(':postid' => $this->postid);
 
 		$db = new Database();
 		$db->connect();
 		$results = $db->query($stmt,$values);
-		$db->close;
+		$db->close();
 
 		$this->setPostId($results[0]["post_id"]);
 		$this->setIp($results[0]["ip_address"]);
@@ -53,14 +53,14 @@ class Confession {
 	function setProxy($value) { $this->proxy = $value; }	
 
 	function postToFb() {
-		$domain = new Domain($this->domain));
+		$domain = new Domain($this->domain);
 		$pageToken = $domain->getPageToken();
         	$pageId = $domain->getPageId();
 
         	$postURL = "https://graph.facebook.com/".$pageId."/feed";
 
        		$data = array(
-                	'message' => $this->content; 
+                	'message' => $this->content, 
                 	'access_token' => $pageToken
         	);
 
