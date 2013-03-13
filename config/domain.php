@@ -7,11 +7,6 @@ class Domain {
 	var $pageid;
 	var $pagetoken;
 
-	function __construct() {
-		$this->setDomain();
-		$this->setPageToken();
-		$this->setPageId();
-	}
 	function __construct($dom) {
 		$this->setDomain($dom);
 		$this->setPageToken();
@@ -22,38 +17,35 @@ class Domain {
 		return $this->domain;
 	}
 
-	function setDomain() {
-		$this->domain = array_shift(explode(".",$_SERVER['HTTP_HOST']));
-		//$this->domain = ($this->domain == "pre") ? "temple" : "pre";
-	}
 	function setDomain($dom) {
-		$this->domain = $dom;
+		if (empty($dom)) {
+			$this->domain = array_shift(explode(".",$_SERVER['HTTP_HOST']));
+		} else {
+			$this->domain = $dom;
+		}
 	}
 
 	function getPageToken() {
 		return $this->pagetoken;
 	}
 	
-	function setPageToken() {
-		try {
-			$db = new Database();
-			$db->connect();
-			$result = $db->query('SELECT access_token FROM pages WHERE cp_domain = :domain;',array(':domain' => $this->domain));
-			$db->close();
-		        $this->pagetoken = $result[0]["access_token"];
-	
-		} catch(PDOException $e) {
-	        	echo "Could not find proper token for " . $this->domain . ".confessionspage.com.";
-		}
-	}
-
 	function setPageToken($value) {
-		if ($this->pagetoken != $value) {
+		if (empty($value)) {
+			try {
+				$db = new Database();
+				$db->connect();
+				$result = $db->query('SELECT access_token FROM pages WHERE cp_domain = :domain;',array(':domain' => $this->domain));
+				$db->close();
+		        	$this->pagetoken = $result[0]["access_token"];
+			} catch(PDOException $e) {
+	        		echo "Could not find proper token for " . $this->domain . ".confessionspage.com.";
+			}
+		} elseif ($this->pagetoken != $value) {
 			$this->pagetoken = $value;
 
 			//Update DB with the new token
 			$stmt = "UPDATE pages SET access_token = :token WHERE cp_domain = :domain";
-			$vals = array(	':token' => $value,
+			$vals = array(	':token' => $this->pagetoken,
 					':domain' => $this->domain);
 			$db = new Database();
 			$db->connect();
@@ -80,7 +72,7 @@ class Domain {
         }
 
 	function isConfigured() {
-		return (isset);
+		return true;
 	}
 }
 ?>
