@@ -34,12 +34,11 @@ require_once('../config/domain.php');
      $accounts = json_decode(file_get_contents($graph_url));
      $pages = $accounts->data;
      foreach($pages as $p) {
-       if ($p->id == $domain->pageId) {
-         $setPageToken($p->access_token);
+       if ($p->id == $domain->pageid) {
+         $domain->setPageToken($p->access_token);
        }
      }
-	echo "ID: " . $p->id . "<br />Token: " . $p->access_token;
-     //echo("<script> top.location.href='" . $loggedinurl . "'; </script>");
+     echo("<script> top.location.href='/'; </script>");
    }
    else {
      echo("The state does not match. You may be a victim of CSRF.");
