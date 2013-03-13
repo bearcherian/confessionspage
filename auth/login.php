@@ -1,9 +1,10 @@
 <?php 
+require_once('../config/app.php');
+require_once('../config/domain.php');
+
    session_start();
-   $subdomain = explode(".",$_SERVER['HTTP_HOST']);
-   $app_id = "340879852685280";
-   $app_secret = "711927c306a77b9bbe1277927e08e102";
-   $my_url = "http://".$subdomain[0].".confessionspage.com/auth/login.php";
+   $domain = new Domain();
+   $my_url = "http://".$domain->domain.".confessionspage.com/auth/login.php";
 
    $code = $_REQUEST["code"];
 
@@ -27,18 +28,18 @@
      parse_str($response, $params);
 
      $_SESSION['access_token'] = $params['access_token'];
-
      $graph_url = "https://graph.facebook.com/me/accounts?access_token=" 
        . $params['access_token'];
 
      $accounts = json_decode(file_get_contents($graph_url));
      $pages = $accounts->data;
      foreach($pages as $p) {
-       if ($p->id == $pageId) {
-         setToken($p->id,$p->access_token);
+       if ($p->id == $domain->pageId) {
+         $setPageToken($p->access_token);
        }
      }
-     echo("<script> top.location.href='" . $loggedinurl . "'; </script>");
+	echo "ID: " . $p->id . "<br />Token: " . $p->access_token;
+     //echo("<script> top.location.href='" . $loggedinurl . "'; </script>");
    }
    else {
      echo("The state does not match. You may be a victim of CSRF.");
