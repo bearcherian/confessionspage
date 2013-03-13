@@ -8,7 +8,7 @@ $domain = new Domain();
 
 if ($postId == null) {
 
-	$confession = new Confession($postId);
+//	$confession = new Confession($postId);
 	$message = "Testing";
 	$pageToken = $domain->getPageToken();
 	$pageId = $domain->getPageId();
@@ -25,7 +25,8 @@ if ($postId == null) {
 	$context  = stream_context_create($options);
 	$result = file_get_contents($postURL, false, $context);
 
-	$fb = json_decode($result,true);	
+	$fb = json_decode($result);	
+	echo $fb->id;
 } else {
 	echo "No post specified.";
 }
