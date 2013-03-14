@@ -11,6 +11,11 @@ class Domain {
 		$this->setDomain($dom);
 		$this->setPageToken();
 		$this->setPageId();
+
+		$config = $this->isConfigured();
+		if ($config == "TABLECHECK_FAILED") {
+			$this->createTable();
+		}
 	}
 
 	function getDomain() {
@@ -72,7 +77,61 @@ class Domain {
         }
 
 	function isConfigured() {
+		if (empty($this->pageid)) {
+			return "PAGEID_FAILED";
+		}
+		if (empty($this->pagetoken)) {
+			return "PAGETOKEN_FAILES";
+		}
+		if (!($this->tableCheck())) {
+			error_log("tablecheck_failed");
+			return "TABLECHECK_FAILED";
+		}
 		return true;
+	}
+	
+	function tableCheck() {
+		try {
+			$tablename = $this->domain . "_posts";
+			$stmt = "SELECT 1 FROM " . $tablename . " LIMIT 1;";
+			$db = new Database();
+			$db->connect();
+			$result = $db->query($stmt,$values);
+			$db->close();
+			if (isset($result->errorInfo)) {
+				error_log("Domain::tablecheck() - No table found.");
+				return false;
+			}	
+			
+			return true;
+		} catch (PDOException $e) {
+			error_log("Domin::tablecheck() - No table found.");
+			return false;
+		}		
+	}
+	
+	function createTable() {
+		try {
+			$tablename = $this->domain . "_posts";
+			$stmt = "CREATE TABLE " . $tablename . " " . 
+				"AS (SELECT * FROM posts WHERE domain = :domain)";
+			$values = array(':domain' => $this->domain);
+			$db = new Database();
+			$db->connect();
+			$e = $db->insert($stmt,$values);
+			if (isset($e->errorInfo)) {
+				$code = $e->getCode();
+				if ($code != "42S01") {
+					//echo $e->getMessage() . "<br />";
+					//print_r($e);
+					return false;
+				}
+			}
+			$db->close();
+			return true;
+		} catch (PDOException $e) {
+			echo "Unable to create table for " . $doamin;
+		}
 	}
 }
 ?>
