@@ -24,8 +24,7 @@ class Database {
 			$qStmt->execute($values);
 			return $qStmt->fetchAll();
 		} catch(PDOException $e) {
-			header('HTTP/1.0 500 Internal Server Error',true,500);
-			echo "Error on query";
+			return $e;
 		}
 	}
 
@@ -33,15 +32,17 @@ class Database {
                 try {           
                         $qStmt = $this->dbconn->prepare($stmt);
                         $qStmt->execute($values);
+			return true;
                 } catch(PDOException $e) {
-			header('HTTP/1.0 500 Internal Server Error',true,500);
-                        echo "Error on insert";// . $e;
+			return $e;
                 }
+
         }	
 
 	function close() {
 		$this->dbconn = null;
 	}
+
 }
 
 ?>
