@@ -77,15 +77,15 @@ class Domain {
         }
 
 	function isConfigured() {
+		if (!($this->tableCheck())) {
+			error_log("tablecheck_failed");
+			return "TABLECHECK_FAILED";
+		}
 		if (empty($this->pageid)) {
 			return "PAGEID_FAILED";
 		}
 		if (empty($this->pagetoken)) {
-			return "PAGETOKEN_FAILES";
-		}
-		if (!($this->tableCheck())) {
-			error_log("tablecheck_failed");
-			return "TABLECHECK_FAILED";
+			return "PAGETOKEN_FAILED";
 		}
 		return true;
 	}
