@@ -1,6 +1,6 @@
 <?php
-require_once('../config/app.php');
-require_once('../dao/db.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/config/app.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/dao/db.php');
 
 class Confession {
 	
@@ -11,6 +11,7 @@ class Confession {
 	var $content;
 	var $fbid;
 	var $status;
+	var $domain;
 
 	function __construct($value,$domain) {
 		$stmt = "SELECT * FROM " . $domain . "_posts WHERE post_id = :postid;";
@@ -31,7 +32,7 @@ class Confession {
 		$this->setTimestamp($results[0]["timestamp"]);
 		$this->setStatus($results[0]["post_status"]);
 		$this->setFbId($results[0]["fb_id"]);
-		//$this->setDomain($results[0]["domain"]);
+		$this->setDomain($domain);
 	}
 	
 	function getPostId() { return $this->postid; }
@@ -54,6 +55,8 @@ class Confession {
 
 	function getProxy() { return $this->proxy; }
 	function setProxy($value) { $this->proxy = $value; }	
-
+	
+	function getDomain() { return $this->domain; }
+	function setDomain($value) { $this->domain = $value; }
 }
 ?>
