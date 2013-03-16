@@ -3,6 +3,7 @@ require_once('../config/app.php');
 require_once('../dao/db.php');
 require_once('../model/domain.php');
 require_once('../model/confession.php');
+require_once('../process/filter.php');
 
 class Process {
 
@@ -52,17 +53,21 @@ class Process {
 		$result = $db->insert($stmt,$values);
 		$db->close();
 	}
+	
+	function passFilter() {
+		
+	
+		return true;
+	}
 
 	function postToFb() {
-		$domain = new Domain($this->domain);
-		$pageToken = $domain->getPageToken();
-        	$pageId = $domain->getPageId();
-
+		$pageToken = $this->domain->getPageToken();
+        	$pageId = $this->domain->getPageId();
         	$postURL = "https://graph.facebook.com/".$pageId."/feed";
 
        		$data = array(
-                	'message' => $this->content, 
-                	'access_token' => $pageToken
+                	'message' => $this->confession->content, 
+                	'access_token' => $this->domain->pageToken
         	);
 
         	// use key 'http' even if you send the request to https://...
@@ -72,12 +77,23 @@ class Process {
 
         	$fb = json_decode($result,true);	
 		if (isset($fb["id"])) {
-			$this->fb_id = $fb["id"];
+			$this->confession->setFbId($fb["id"]);
+			$this->updateConfessionFBId();
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
+	function updateConfessionFBId() {
+		$stmt = "UPDATE " . $this->domain->domain . "_posts " . 
+			"SET fb_id = :fbid WHERE post_id = :postid;";
+		$vals = array(":fbid" => $confession->fbid,
+				":postid" => $confession->postid);
+		$db = new Database();
+		$db->connect();
+		$db->insert($stmt,$vals);
+		$db->close();
+	}	
 }
 ?>

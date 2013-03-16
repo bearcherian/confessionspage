@@ -5,12 +5,12 @@ require_once('../dao/db.php');
 class Confession {
 	
 	var $postid;
-	var $content;
 	var $ip;
+	var $proxy;
 	var $timestamp;
+	var $content;
 	var $fbid;
 	var $status;
-	var $proxy;
 
 	function __construct($value,$domain) {
 		$stmt = "SELECT * FROM " . $domain . "_posts WHERE post_id = :postid;";
