@@ -1,6 +1,6 @@
 <?php
-require_once('app.php');
-require_once('db.php');
+require_once('../config/app.php');
+require_once('../dao/db.php');
 
 class Confession {
 	
@@ -21,6 +21,9 @@ class Confession {
 		$results = $db->query($stmt,$values);
 		$db->close();
 
+		if ( isset($results->errorInfo)) {
+			return false;
+		}
 		$this->setPostId($results[0]["post_id"]);
 		$this->setIp($results[0]["ip_address"]);
 		$this->setProxy($results[0]["ip_proxy"]);

@@ -1,5 +1,5 @@
 <?php
-require_once('db.php');
+require_once('../dao/db.php');
 
 class Domain {
 	
@@ -7,7 +7,7 @@ class Domain {
 	var $pageid;
 	var $pagetoken;
 
-	function __construct($dom) {
+	function __construct($dom = null) {
 		$this->setDomain($dom);
 		$this->setPageToken();
 		$this->setPageId();
@@ -34,7 +34,7 @@ class Domain {
 		return $this->pagetoken;
 	}
 	
-	function setPageToken($value) {
+	function setPageToken($value = null) {
 		if (empty($value)) {
 			try {
 				$db = new Database();
@@ -96,7 +96,7 @@ class Domain {
 			$stmt = "SELECT 1 FROM " . $tablename . " LIMIT 1;";
 			$db = new Database();
 			$db->connect();
-			$result = $db->query($stmt,$values);
+			$result = $db->query($stmt,null);
 			$db->close();
 			if (isset($result->errorInfo)) {
 				error_log("Domain::tablecheck() - No table found.");
