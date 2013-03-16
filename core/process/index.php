@@ -1,33 +1,30 @@
 <?php
-require_once('../process/process.php');
-echo "<pre>";
+if ($_SERVER['HTTP_HOST'] != "localhost") exit;
+
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/process/process.php');
 
 //get all domains
 //for each domain, pull first new post, filter, process
 $process = new Process();
+/*
+echo "<pre>";
 print_r($process->domain);
 echo "<br />";
 print_r($process->confession);
-
 print_r($process->filter);
-
+*/
 if ($process->filter != null) {
 
-	echo "IP Filter: ";
-	echo ($process->filter->recentIp()) ? 'true' : 'false';
-	echo "\nDuplicate Filter: ";
-	echo ($process->filter->duplicatePost()) ? 'true' : 'false';
-	echo "\nNumber Filter: ";
-	echo ($process->filter->hasNumber()) ? 'true' : 'false';
-	echo "\nProfanity Filter: ";
-	echo ($process->filter->hasProfanity()) ? 'true' : 'false';
-
+	if (	
+		$process->filter->recentIp() || 
+		$process->filter->duplicatePost() ||
+		$process->filter->hasNumber() ||
+		$process->filter->hasProfanity()
+	) {
+		$process->postFiltered();
+	} else {
+		$process->postToFb();
+	}
 }
 
-echo "</pre>";
-
-
-
-//$domain = new Domain();
-//echo $domain->domain . " " . $domain->pageid . " " . $domain->pagetoken;
 ?>
