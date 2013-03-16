@@ -124,6 +124,7 @@ class Domain {
 			$db->connect();
 			$e = $db->insert($stmt,$values);
 			if (isset($e->errorInfo)) {
+				$code = $e2->getCode();
 				if ($code != "42S01") {
 					//echo $e->getMessage() . "<br />";
 					//print_r($e);
