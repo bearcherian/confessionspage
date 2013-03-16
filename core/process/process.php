@@ -1,9 +1,9 @@
 <?php
-require_once('../config/app.php');
-require_once('../dao/db.php');
-require_once('../model/domain.php');
-require_once('../model/confession.php');
-require_once('../process/filter.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/config/app.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/dao/db.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/model/domain.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/model/confession.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/process/filter.php');
 
 class Process {
 
@@ -11,11 +11,17 @@ class Process {
 	var $page;
 	var $domain;
 	var $allpages;
+	var $filter;
 
 	function __construct() {
 		$this->domain = $this->getNextPage();
 		$this->updatePage();
 		$this->confession = $this->getNextPost();
+		if ($this->confession != null) {
+			$this->filter = new Filter(new Confession($this->confession->getPostId(),$this->domain->domain));
+		} else {
+			$this->filter = null;
+		}
 	}
 
 	function getNextPage() {
@@ -24,13 +30,12 @@ class Process {
 		$db->connect();
 		$result = $db->query($stmt,null);
 		$db->close();
-	
 		return new Domain($result[0]['cp_domain']);
 
 	}
 
 	function getNextPost() {
-		$stmt = "SELECT * FROM " . $this->domain->domain . "_posts WHERE post_status = 'new' ORDER BY timestamp ASC LIMIT 1;";
+		$stmt = "SELECT * FROM " . $this->domain->domain . "_posts WHERE fb_id IS NULL AND (post_status = 'new' OR post_status = 'approved') ORDER BY timestamp ASC LIMIT 1;";
 		$db = new Database();
 		$db->connect();
 		$result = $db->query($stmt,null);
