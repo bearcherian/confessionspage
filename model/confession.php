@@ -12,9 +12,9 @@ class Confession {
 	var $status;
 	var $proxy;
 
-	function __construct($value) {
-		$stmt = "SELECT * FROM posts WHERE post_id = :postid;";
-		$values = array(':postid' => $this->postid);
+	function __construct($value,$domain) {
+		$stmt = "SELECT * FROM " . $domain . "_posts WHERE post_id = :postid;";
+		$values = array(':postid' => $value); //$this->postid);
 
 		$db = new Database();
 		$db->connect();
@@ -31,7 +31,7 @@ class Confession {
 		$this->setTimestamp($results[0]["timestamp"]);
 		$this->setStatus($results[0]["post_status"]);
 		$this->setFbId($results[0]["fb_id"]);
-		$this->setDomain($results[0]["domain"]);
+		//$this->setDomain($results[0]["domain"]);
 	}
 	
 	function getPostId() { return $this->postid; }
@@ -55,30 +55,5 @@ class Confession {
 	function getProxy() { return $this->proxy; }
 	function setProxy($value) { $this->proxy = $value; }	
 
-	function postToFb() {
-		$domain = new Domain($this->domain);
-		$pageToken = $domain->getPageToken();
-        	$pageId = $domain->getPageId();
-
-        	$postURL = "https://graph.facebook.com/".$pageId."/feed";
-
-       		$data = array(
-                	'message' => $this->content, 
-                	'access_token' => $pageToken
-        	);
-
-        	// use key 'http' even if you send the request to https://...
-        	$options = array('http' => array('method'  => 'POST','content' => http_build_query($data)));
-        	$context  = stream_context_create($options);
-        	$result = file_get_contents($postURL, false, $context);
-
-        	$fb = json_decode($result,true);	
-		if (isset($fb["id"])) {
-			$this->fb_id = $fb["id"];
-			return true;
-		} else {
-			return false;
-		}
-	}
 }
 ?>
