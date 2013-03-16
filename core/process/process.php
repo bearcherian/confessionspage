@@ -65,6 +65,9 @@ class Process {
 		return true;
 	}
 
+	/**
+	 *	Posts to Facebook based on domain. Updated db with FB upon success.
+	 */
 	function postToFb() {
 		$pageToken = $this->domain->getPageToken();
         	$pageId = $this->domain->getPageId();
@@ -72,7 +75,7 @@ class Process {
 
        		$data = array(
                 	'message' => $this->confession->content, 
-                	'access_token' => $this->domain->pageToken
+                	'access_token' => $this->domain->getPageToken()
         	);
 
         	// use key 'http' even if you send the request to https://...
@@ -89,16 +92,30 @@ class Process {
 			return false;
 		}
 	}
-	
+
+	/**
+	 *	Updates DB with fb ID for this post
+	 */	
 	function updateConfessionFBId() {
 		$stmt = "UPDATE " . $this->domain->domain . "_posts " . 
-			"SET fb_id = :fbid WHERE post_id = :postid;";
-		$vals = array(":fbid" => $confession->fbid,
-				":postid" => $confession->postid);
+			"SET fb_id = :fbid, post_status = 'approved' WHERE post_id = :postid;";
+		$vals = array(":fbid" => $this->confession->fbid,
+				":postid" => $this->confession->postid);
 		$db = new Database();
 		$db->connect();
 		$db->insert($stmt,$vals);
 		$db->close();
 	}	
+	
+	function postFiltered() {
+		$stmt = "UPDATE " . $this->domain->domain . "_posts " .
+                        "SET post_status = 'filtered' WHERE post_id = :postid;";
+                $db = new Database();
+		$vals = array(":postid" => $this->confession->postid);
+                $db->connect();
+                $db->insert($stmt,$vals);
+                $db->close();
+        }
+
 }
 ?>
