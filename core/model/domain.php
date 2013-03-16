@@ -114,7 +114,9 @@ class Domain {
 		try {
 			$tablename = $this->domain . "_posts";
 			$stmt = "CREATE TABLE " . $tablename . " " . 
-				"AS (SELECT * FROM posts WHERE domain = :domain)";
+				"AS (SELECT * FROM posts WHERE domain = :domain);" . 
+				"ALTER TABLE " . $tablename . 
+				" ADD PRIMARY KEY(post_id);";
 			$values = array(':domain' => $this->domain);
 			$db = new Database();
 			$db->connect();
