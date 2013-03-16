@@ -1,6 +1,6 @@
 <?php 
-require_once('../config/app.php');
-require_once('../config/domain.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/config/app.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/model/domain.php');
 
    session_start();
    $domain = new Domain();
@@ -36,11 +36,15 @@ require_once('../config/domain.php');
      foreach($pages as $p) {
        if ($p->id == $domain->pageid) {
          $domain->setPageToken($p->access_token);
+         echo "Access configuration complete.";
+       } else {
+         echo "You do not have access to edit the Facebook page associated with this domain.";
        }
      }
-     echo("<script> top.location.href='/'; </script>");
+     //echo("<script> top.location.href='/'; </script>");
    }
    else {
      echo("The state does not match. You may be a victim of CSRF.");
    }
+echo "</pre>";
  ?>
