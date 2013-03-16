@@ -21,7 +21,7 @@ class Confession {
 		$results = $db->query($stmt,$values);
 		$db->close();
 
-		if ( isset($results->errorInfo)) {
+		if ( isset($results->errorInfo) || empty($results)) {
 			return false;
 		}
 		$this->setPostId($results[0]["post_id"]);
