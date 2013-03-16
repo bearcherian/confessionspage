@@ -1,5 +1,5 @@
 <?php
-require_once('../dao/db.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/dao/db.php');
 
 class Domain {
 	
@@ -11,7 +11,7 @@ class Domain {
 		$this->setDomain($dom);
 		$this->setPageToken();
 		$this->setPageId();
-
+		
 		$config = $this->isConfigured();
 		if ($config == "TABLECHECK_FAILED") {
 			$this->createTable();
@@ -114,15 +114,16 @@ class Domain {
 		try {
 			$tablename = $this->domain . "_posts";
 			$stmt = "CREATE TABLE " . $tablename . " " . 
-				"AS (SELECT * FROM posts WHERE domain = :domain);" . 
-				"ALTER TABLE " . $tablename . 
+				"AS (SELECT * FROM posts WHERE domain = :domain);"; 
+			$stmt2 = "ALTER TABLE " . $tablename . 
 				" ADD PRIMARY KEY(post_id);";
+			$stmt3 = "ALTER TABLE " . $tablename . " CHANGE `timestamp` `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP";
+			$stmt4 = "ALTER TABLE " . $tablename . " CHANGE  `post_id`  `post_id` INT( 11 ) NOT NULL AUTO_INCREMENT;";
 			$values = array(':domain' => $this->domain);
 			$db = new Database();
 			$db->connect();
 			$e = $db->insert($stmt,$values);
 			if (isset($e->errorInfo)) {
-				$code = $e->getCode();
 				if ($code != "42S01") {
 					//echo $e->getMessage() . "<br />";
 					//print_r($e);
@@ -130,6 +131,23 @@ class Domain {
 				}
 			}
 			$db->close();
+
+			$db2 = new Database();
+			$db2->connect();
+			$e2 = $db2->insert($stmt2,null);
+			$e3 = $db2->insert($stmt3,null);
+			$e4 = $db2->insert($stmt4,null);
+			$db->close();
+
+			if (isset($e2->errorInfo)) {
+                                $code = $e2->getCode();
+                                if ($code != "42S01") {
+                                        //echo $e->getMessage() . "<br />";
+                                        //print_r($e);
+                                        return false;
+                                }
+                        }
+
 			return true;
 		} catch (PDOException $e) {
 			echo "Unable to create table for " . $doamin;
