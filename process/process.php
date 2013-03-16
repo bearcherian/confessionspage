@@ -35,7 +35,7 @@ class Process {
 		$result = $db->query($stmt,null);
 		$db->close();
 		
-		if (isset($result->errorInfo)) {
+		if (isset($result->errorInfo) || empty($result)) {
 			return null;
 		} else {
 			return new Confession($result[0]['post_id'],$this->domain->domain);
