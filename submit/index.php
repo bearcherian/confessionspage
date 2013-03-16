@@ -1,7 +1,7 @@
 <?php
 require_once('../config/app.php');
-require_once('../config/db.php');
-require_once('../config/domain.php');
+require_once('../dao/db.php');
+require_once('../model/domain.php');
 
 $domain = new Domain();
 
@@ -23,7 +23,10 @@ $values = array(':ip' => $ip,
 
 $db = new Database();
 $db->connect();
-$db->insert($statement,$values);
+$result = $db->insert($statement,$values);
 $db->close();
-
+if (isset($result->errorInfo) {
+	header('HTTP/1.0 500 Internal Server Error',true,500);
+	echo "Unable to submit";
+}
 ?>
