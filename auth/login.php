@@ -37,10 +37,10 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/core/model/domain.php');
        if ($p->id == $domain->pageid) {
          $domain->setPageToken($p->access_token);
          echo "Access configuration complete.";
-       } else {
-         echo "You do not have access to edit the Facebook page associated with this domain.";
+         exit;
        }
      }
+
      //echo("<script> top.location.href='/'; </script>");
    }
    else {
