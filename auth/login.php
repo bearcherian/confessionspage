@@ -1,10 +1,10 @@
 <?php 
-
-   $app_id = "340879852685280";
-   $app_secret = "711927c306a77b9bbe1277927e08e102";
-   $my_url = "http://www.confessionspage.com/auth/login.php";
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/config/app.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/core/model/domain.php');
 
    session_start();
+   $domain = new Domain();
+   $my_url = "http://".$domain->domain.".confessionspage.com/auth/login.php";
 
    $code = $_REQUEST["code"];
 
@@ -28,14 +28,23 @@
      parse_str($response, $params);
 
      $_SESSION['access_token'] = $params['access_token'];
-
-     $graph_url = "https://graph.facebook.com/me?access_token=" 
+     $graph_url = "https://graph.facebook.com/me/accounts?access_token=" 
        . $params['access_token'];
 
-     $user = json_decode(file_get_contents($graph_url));
-     echo("Hello " . $user->name);
+     $accounts = json_decode(file_get_contents($graph_url));
+     $pages = $accounts->data;
+     foreach($pages as $p) {
+       if ($p->id == $domain->pageid) {
+         $domain->setPageToken($p->access_token);
+         echo "Access configuration complete.";
+       } else {
+         echo "You do not have access to edit the Facebook page associated with this domain.";
+       }
+     }
+     //echo("<script> top.location.href='/'; </script>");
    }
    else {
      echo("The state does not match. You may be a victim of CSRF.");
    }
+echo "</pre>";
  ?>
