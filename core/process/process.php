@@ -40,6 +40,10 @@ class Process {
 			}
 		}
 	}
+
+	function isApproved() {
+		return ($this->confession->status = "approved");
+	}
 	
 	function updatePage() {
 		$stmt = "UPDATE pages " . 
@@ -72,7 +76,12 @@ class Process {
         	);
 
         	// use key 'http' even if you send the request to https://...
-        	$options = array('http' => array('method'  => 'POST','content' => http_build_query($data)));
+        	$options = array('http' => array(
+						'method'  => 'POST',
+						'header' => 'Content-Type: application/x-www-form-urlencoded\r\n',
+						'content' => http_build_query($data)
+						)
+				);
         	$context  = stream_context_create($options);
         	$result = file_get_contents($postURL, false, $context);
 
@@ -82,7 +91,8 @@ class Process {
 			$this->updateConfessionFBId();
 			return true;
 		} else {
-			$this->postError();
+		//	$this->postError();
+			error_log("Process::postToFb - " . $result);
 			return false;
 		}
 	}
