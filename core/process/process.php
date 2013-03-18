@@ -14,7 +14,7 @@ class Process {
 	var $filter;
 
 	function __construct() {
-		$stmt = "SELECT * FROM pages ORDER BY lastprocessed ASC LIMIT 1;";
+		$stmt = "SELECT * FROM pages ORDER BY lastprocessed ASC;";
 		$db = new Database();
 		$db->connect();
 		$result = $db->query($stmt,null);
