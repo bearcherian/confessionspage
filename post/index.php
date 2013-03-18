@@ -9,6 +9,10 @@
 <script>
 function submitConfession() {
 	var post = $("#confession").val();
+	if (post == "" || post == null) {
+		alert ("You didn't fill anything out!");
+		return false;
+	}
 	$("#confessionform").hide();
 	$("#complete").html("Please wait...");
 	$.ajax({
@@ -17,9 +21,20 @@ function submitConfession() {
 		data: {confession: post},
 		success: function() {
 			$("#complete").html("<h4>We got it!</h4><p id='confirmation'>" + post + "</p>");
+			_gaq.push([
+				'_trackEvent',
+				'Submit Post',
+				'Success'
+			]);
 		},
 		error: function() {
 			$("#complete").html("<h4>Sorry, something broke. Try agian in a litte bit.</h4>");
+			_gaq.push([
+                                '_trackEvent',
+                                'Submit Post',
+                                'Failure',
+				post
+                        ]);
 		}
 	});
 	return false;
@@ -55,6 +70,7 @@ $(document).ready(function() {
 </script>
 </head>
 <body>
+<div id="page">
 <div id="confessionform">
 	<p>
 	Submit your confession:
@@ -67,5 +83,6 @@ $(document).ready(function() {
 	</form>
 </div>
 <div id="complete"></div>
+</div>
 </body>
 </html>
