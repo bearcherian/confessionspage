@@ -1,0 +1,23 @@
+body {
+	font-family: 'Libre Baskerville', serif;
+}
+div#confessionform {
+	margin-left: auto;
+	margin-right: auto;
+	width: 575px;
+	text-align: center;
+}
+#cform textarea#confession {
+	font-family: 'Libre Baskerville', serif;
+	font-size: 115%;
+	width: 577px;
+	padding: 0;
+	margin: 0;
+}
+#cform button#submit {
+	width: 580px;
+	font-family: 'Libre Baskerville', serif;
+	font-size: 170%;
+	height: 50px;
+	font-variant: small-caps;
+}
