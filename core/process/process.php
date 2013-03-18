@@ -82,6 +82,7 @@ class Process {
 			$this->updateConfessionFBId();
 			return true;
 		} else {
+			$this->postError();
 			return false;
 		}
 	}
@@ -103,6 +104,16 @@ class Process {
 	function postFiltered() {
 		$stmt = "UPDATE " . $this->domain->domain . "_posts " .
                         "SET post_status = 'filtered' WHERE post_id = :postid;";
+                $db = new Database();
+		$vals = array(":postid" => $this->confession->postid);
+                $db->connect();
+                $db->insert($stmt,$vals);
+                $db->close();
+        }
+
+	function postError() {
+		$stmt = "UPDATE " . $this->domain->domain . "_posts " .
+                        "SET post_status = 'error' WHERE post_id = :postid;";
                 $db = new Database();
 		$vals = array(":postid" => $this->confession->postid);
                 $db->connect();
