@@ -1,5 +1,8 @@
 <?php
-if ($_SERVER['HTTP_HOST'] != "localhost") exit;
+if ($_SERVER['HTTP_HOST'] != "localhost") {
+	error_log("Unauthorized access. Host: " . $_SERVER['HTTP_HOST']);
+	exit;
+}
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/core/process/process.php');
 
