@@ -11,7 +11,7 @@ class Filter {
 	}
 	
         function isApproved() {
-                return ($this->confession->status = "approved");
+                return ((bool)($this->confession->status == "approved"));
         }
 
 	/**
