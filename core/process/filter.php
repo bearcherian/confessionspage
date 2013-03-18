@@ -10,6 +10,9 @@ class Filter {
 		$this->tablename = $confession->getDomain() . "_posts";
 	}
 	
+        function isApproved() {
+                return ($this->confession->status = "approved");
+        }
 
 	/**
 	 *	Returns true if this IP has posted within the last hour.
