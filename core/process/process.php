@@ -40,6 +40,10 @@ class Process {
 			}
 		}
 	}
+
+	function isApproved() {
+		return ($this->confession->status = "approved");
+	}
 	
 	function updatePage() {
 		$stmt = "UPDATE pages " . 

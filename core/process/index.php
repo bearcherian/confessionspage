@@ -18,12 +18,14 @@ print_r($process->filter);
 */
 if ($process->filter != null) {
 
-	if (	
+	if ($process->filter->isApproved() ) {
+		$process->postToFb();
+	} else if (	
 		$process->filter->recentIp() || 
 		$process->filter->duplicatePost() ||
 		$process->filter->hasNumber() ||
 		$process->filter->hasProfanity()
-	) {
+	          ) {
 		$process->postFiltered();
 	} else {
 		$process->postToFb();
