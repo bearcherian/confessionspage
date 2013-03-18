@@ -17,9 +17,20 @@ function submitConfession() {
 		data: {confession: post},
 		success: function() {
 			$("#complete").html("<h4>We got it!</h4><p id='confirmation'>" + post + "</p>");
+			_gaq.push([
+				'_trackEvent',
+				'Submit Post',
+				'Success'
+			]);
 		},
 		error: function() {
 			$("#complete").html("<h4>Sorry, something broke. Try agian in a litte bit.</h4>");
+			_gaq.push([
+                                '_trackEvent',
+                                'Submit Post',
+                                'Failure',
+				post
+                        ]);
 		}
 	});
 	return false;
