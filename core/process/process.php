@@ -31,8 +31,8 @@ class Process {
                 	$result = $db->query($stmt,null);
                 	$db->close();		
 
-			if(isset($result[0]['post_id']) {
-				$this->domain = new Domain($page["cp_domain"];
+			if(isset($result[0]['post_id'])) {
+				$this->domain = new Domain($page["cp_domain"]);
 				$this->updatePage();
 				$this->confession = new Confession($result[0]['post_id'],$this->domain->domain);
 				$this->filter = new Filter(new Confession($this->confession->getPostId(),$this->domain->domain));
