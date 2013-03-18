@@ -9,6 +9,10 @@
 <script>
 function submitConfession() {
 	var post = $("#confession").val();
+	if (post == "" || post == null) {
+		alert ("You didn't fill anything out!");
+		return false;
+	}
 	$("#confessionform").hide();
 	$("#complete").html("Please wait...");
 	$.ajax({
@@ -66,6 +70,7 @@ $(document).ready(function() {
 </script>
 </head>
 <body>
+<div id="page">
 <div id="confessionform">
 	<p>
 	Submit your confession:
@@ -78,5 +83,6 @@ $(document).ready(function() {
 	</form>
 </div>
 <div id="complete"></div>
+</div>
 </body>
 </html>
