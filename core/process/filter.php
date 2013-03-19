@@ -74,7 +74,7 @@ class Filter {
 	 *	Returns true if it contains any of the specified profanity words
 	 */
 	function hasProfanity() {
-		$profaneExp = "(fuck|shit|bitch|cock|cunt|fag|slut|nigger)";
+		$profaneExp = "/(fuck|shit|bitch|cock|cunt|fag|slut|nigger)/i";
 
 		return (bool)preg_match($profaneExp, $this->confession->getContent());
 	}
