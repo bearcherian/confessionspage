@@ -15,6 +15,13 @@ class Filter {
         }
 
 	/**
+	 *
+	 */
+	function hasCaps() {
+		return preg_match("/[A-Z]{3,}/",$this->confession->getContent());
+	}
+
+	/**
 	 *	Returns true if this IP has posted within the last hour.
 	 */
 	function recentIp() {
