@@ -87,8 +87,8 @@ class Process {
 			$this->updateConfessionFBId();
 			return true;
 		} else {
-		//	$this->postError();
-			error_log("Process::postToFb - " . $result);
+			$this->postError();
+			error_log("Process::postToFb[". $this->confession->postid ." - " . $fb["error"]["message"]);
 			return false;
 		}
 	}
