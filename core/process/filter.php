@@ -18,7 +18,7 @@ class Filter {
 	 *
 	 */
 	function hasCaps() {
-		return preg_match("/[A-Z]{3,}/",$this->confession->getContent());
+		return (bool)preg_match("/[A-Z]{3,}/",$this->confession->getContent());
 	}
 
 	/**
@@ -91,6 +91,10 @@ class Filter {
 	 */
 	function hasNumber() {
 		return (bool)preg_match("/([0-9]){3,}/",$this->confession->getContent());
+	}
+
+	function hasLink() {
+		return (bool)preg_match("/(http:|www|.com|.net|.org|.us|.biz)/",$this->confession->getContent());
 	}
 }
 ?>

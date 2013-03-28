@@ -24,6 +24,8 @@ if ($process->filter != null) {
 		$process->filter->recentIp() || 
 		$process->filter->duplicatePost() ||
 		$process->filter->hasNumber() ||
+		$process->filter->hasCaps() ||
+		$process->filter->hasLink() ||
 		$process->filter->hasProfanity()
 	          ) {
 		$process->postFiltered();
