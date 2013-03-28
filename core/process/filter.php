@@ -94,7 +94,7 @@ class Filter {
 	}
 
 	function hasLink() {
-		return (bool)preg_match("/(http:|www|.com|.net|.org|.us|.biz)/");
+		return (bool)preg_match("/(http:|www|.com|.net|.org|.us|.biz)/",$this->confession->getContent());
 	}
 }
 ?>
