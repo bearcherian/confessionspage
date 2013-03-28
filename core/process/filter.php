@@ -25,7 +25,7 @@ class Filter {
 	 *	Returns true if this IP has posted within the last hour.
 	 */
 	function recentIp() {
-		$stmt = "SELECT * FROM " . $this->tablename . " WHERE fb_id IS NOT NULL AND ip_address = :ip AND post_id <> :currentid ORDER BY timestamp ASC LIMIT 1;";
+		$stmt = "SELECT * FROM " . $this->tablename . " WHERE post_status <> 'filtered' AND ip_address = :ip AND post_id <> :currentid ORDER BY timestamp DESC LIMIT 1;";
 		$vals = array( ":ip" => $this->confession->getIp(),
 				":currentid" => $this->confession->getPostId());		
 		$db = new Database();
@@ -82,6 +82,12 @@ class Filter {
 	 */
 	function hasProfanity() {
 		$profaneExp = "/(fuck|shit|bitch|cock|cunt|fag|slut|nigger)/i";
+
+		return (bool)preg_match($profaneExp, $this->confession->getContent());
+	}
+
+	function hasKeywords() {
+		$profaneExp = "/(\sadmin\s|\sadministrator\s)/i";
 
 		return (bool)preg_match($profaneExp, $this->confession->getContent());
 	}
